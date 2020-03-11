@@ -76,7 +76,7 @@ void data_indication(zb_uint8_t param) ZB_CALLBACK;
   ZR joins to ZC, then sends APS packet.
  */
 
-zb_ieee_addr_t g_ieee_addr = {0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01};
+zb_ieee_addr_t g_ieee_addr = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08};
 
 
 MAIN()
@@ -137,9 +137,9 @@ void zb_zdo_startup_complete(zb_uint8_t param) ZB_CALLBACK
 static void send_data(zb_buf_t *buf)
 {
   zb_apsde_data_req_t *req;
-  zb_uint8_t *ptr = NULL;
+  zb_char_t *ptr = NULL;
   zb_short_t i;
-
+  char lname[] = "Gudkov";
   ZB_BUF_INITIAL_ALLOC(buf, ZB_TEST_DATA_SIZE, ptr);
   req = ZB_GET_BUF_TAIL(buf, sizeof(zb_apsde_data_req_t));
   req->dst_addr.addr_short = 0; /* send to ZC */
@@ -155,11 +155,10 @@ static void send_data(zb_buf_t *buf)
 #if 0   /* test with wrong pan_id after join */
   MAC_PIB().mac_pan_id = 0x1aaa;
   ZB_UPDATE_PAN_ID();						   ?
-#endif 													 
-
-  for (i = 0 ; i < ZB_TEST_DATA_SIZE ; ++i)
+#endif 												
+  for(i = 0; i < ZB_TEST_DATA_SIZE; i++)
   {
-    ptr[i] = i % 32 + '0';
+    ptr[i] = lname[i];
   }
   TRACE_MSG(TRACE_APS2, "Sending apsde_data.request", (FMT__0));
 

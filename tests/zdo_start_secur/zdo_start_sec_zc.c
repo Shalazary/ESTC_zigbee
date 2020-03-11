@@ -186,27 +186,28 @@ void data_indication(zb_uint8_t param) ZB_CALLBACK
 #ifndef APS_RETRANSMIT_TEST
 static void zc_send_data(zb_buf_t *buf, zb_uint16_t addr)
 {
-    zb_apsde_data_req_t *req;
-    zb_uint8_t *ptr = NULL;
-    zb_short_t i;
-  
-    ZB_BUF_INITIAL_ALLOC(buf, ZB_TEST_DATA_SIZE, ptr);
-    req = ZB_GET_BUF_TAIL(buf, sizeof(zb_apsde_data_req_t));
-    req->dst_addr.addr_short = addr; /* send to ZR */
-    req->addr_mode = ZB_APS_ADDR_MODE_16_ENDP_PRESENT;
-    req->tx_options = ZB_APSDE_TX_OPT_ACK_TX;
-    req->radius = 1;
-    req->profileid = 2;
-    req->src_endpoint = 10;
-    req->dst_endpoint = 10;  
-    buf->u.hdr.handle = 0x11;  
-    for (i = 0 ; i < ZB_TEST_DATA_SIZE ; ++i)
-    {
-      ptr[i] = i % 32 + '0';
-    }
-    TRACE_MSG(TRACE_APS2, "Sending apsde_data.request", (FMT__0));  
-    ZB_SCHEDULE_CALLBACK(zb_apsde_data_request, ZB_REF_FROM_BUF(buf));
+
+  zb_apsde_data_req_t *req;
+  zb_char_t *ptr = NULL;
+  zb_short_t i;
+  char fname[] = "Vasiliy";
+  ZB_BUF_INITIAL_ALLOC(buf, ZB_TEST_DATA_SIZE, ptr);
+  req = ZB_GET_BUF_TAIL(buf, sizeof(zb_apsde_data_req_t));
+  req->dst_addr.addr_short = addr; /* send to ZR */
+  req->addr_mode = ZB_APS_ADDR_MODE_16_ENDP_PRESENT;
+  req->tx_options = ZB_APSDE_TX_OPT_ACK_TX;
+  req->radius = 1;
+  req->profileid = 2;
+  req->src_endpoint = 10;
+  req->dst_endpoint = 10;  
+  buf->u.hdr.handle = 0x11;  
+  for (i = 0 ; i < ZB_TEST_DATA_SIZE ; ++i)
+  {
+    ptr[i] = fname[i];
   }
+  TRACE_MSG(TRACE_APS2, "Sending apsde_data.request", (FMT__0));  
+  ZB_SCHEDULE_CALLBACK(zb_apsde_data_request, ZB_REF_FROM_BUF(buf));
+}
 #endif
 
 /*! @} */
